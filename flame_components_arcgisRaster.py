@@ -37,7 +37,9 @@ def getMidFlameWS(windspeed, canopy_cover, canopy_ht, canopy_baseht, units):
         canopy_baseht *= 3.28084    # convert cbh in meters to feet
     elif units == 'IMP':
         windspeed /= 2.23694        # convert mi/h to m/s
-    crown_ratio = (canopy_ht - canopy_baseht) / canopy_ht   # calculate crown ratio
+
+    # calculate crown ratio
+    crown_ratio = Con(canopy_ht == 0, 0, (canopy_ht - canopy_baseht) / canopy_ht)
     f = crown_ratio * canopy_cover / 300
 
     # Replace canopy height values of 0 with 0.5 m

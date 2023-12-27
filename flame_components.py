@@ -44,7 +44,7 @@ def getMidFlameWS(windspeed, canopy_cover, canopy_ht, canopy_baseht, units):
 
     if f <= 5:
         # Return unsheltered midflame windspeed
-        # return ws * 0.5
+        # return ws * 0.4
         return windspeed * 1.83 / log((20 + (0.36 * canopy_ht)) / (0.13 * canopy_ht))
     else:
         # Return sheltered midflame windspeed
