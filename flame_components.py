@@ -54,6 +54,7 @@ def getMidFlameWS(windspeed, canopy_cover, canopy_ht, canopy_baseht, units):
 # FUNCTION TO CALCULATE FLAME LENGTH
 def getFlameLength(model, fire_intensity, flame_depth=None, params_only=False):
     """
+    Function to estimate flame length from a variety of published models.
     Equation from Nelson and Adkins (1986) - referenced in Cruz and Alexander (2018)
     :param model: flame length model (refer to "model_dict" for list of options)
         All models come from Finney and Grumstrup (2023), including their own 2023 model
@@ -90,7 +91,7 @@ def getFlameLength(model, fire_intensity, flame_depth=None, params_only=False):
         'Weise1_HEAD': (0.016000, 0.7000),      # Weise and Biging (1996); Source = Excelsior & birch stir sticks; Lab
         'Catchpole_HEAD': (0.032500, 0.5600),   # Catchpole et al. (1998); Source = Heath; Field
         'Fernandes1_HEAD': (0.051600, 0.4530),  # Fernandes et al. (2000); Source = Shrubs; Field
-        'Butler_HEAD': (0.017500, 2/3),         # Butler et al. (2004); Source = Crownfire; Unkn
+        'Butler_HEAD': (0.017500, 2/3),         # Butler et al. (2004); Source = Crownfire (add to avg. stand ht); Unkn
         'Fernandes_HEAD': (0.045000, 0.5430),   # Fernandes et al. (2009); Source = Needles; Field
         'Nelson3_HEAD': (0.014200, 2/3),        # Nelson et al. (2012); Source = Needles/southern Fuel; Lab
         'Nelson4_HEAD': (0.015500, 2/3),        # Nelson et al. (2012); Source = Needles/southern Fuel; Field
