@@ -4,13 +4,18 @@ Created on Wed Oct  11 13:25:52 2023
 
 @author: Gregory A. Greene
 """
+
 import numpy as np
 from numpy import cos, sin, tan, arccos, arcsin, arctan
 from numpy import pi, sqrt, log, degrees, radians
 
 
 # FUNCTION TO CALCULATE MID-FLAME WIND SPEED
-def getMidFlameWS(windspeed, canopy_cover, canopy_ht, canopy_baseht, units):
+def getMidFlameWS(windspeed: float,
+                  canopy_cover: float,
+                  canopy_ht: float,
+                  canopy_baseht: float,
+                  units: str) -> float:
     """
     Function calculates mid-flame wind speed
     :param windspeed: wind speed; if units == "SI": 10m wind speed (km/h); if units == "IMP"" 20ft wind speed (mi/h)
@@ -52,7 +57,10 @@ def getMidFlameWS(windspeed, canopy_cover, canopy_ht, canopy_baseht, units):
 
 
 # FUNCTION TO CALCULATE FLAME LENGTH
-def getFlameLength(model, fire_intensity, flame_depth=None, params_only=False):
+def getFlameLength(model: str,
+                   fire_intensity: float,
+                   flame_depth: float = None,
+                   params_only: bool = False) -> float:
     """
     Equation from Nelson and Adkins (1986) - referenced in Cruz and Alexander (2018)
     :param model: flame length model (refer to "model_dict" for list of options)
@@ -117,9 +125,11 @@ def getFlameLength(model, fire_intensity, flame_depth=None, params_only=False):
 
 
 # FUNCTION TO CALCULATE FLAME HEIGHT
-def getFlameHeight(model, flame_length,
-                   fire_type=None, fire_intensity=None, midflame_ws=None,   # Only for Nelson model
-                   flame_tilt=None, slope_angle=None, slope_units=None):    # Only for Finney model
+def getFlameHeight(model,
+                   flame_length,
+                   fire_type: str = None, fire_intensity: float = None, midflame_ws: float = None,  # For Nelson model
+                   flame_tilt: float = None, slope_angle: float = None, slope_units: str = None     # For Finney model
+                   ) -> float:
     """
     Equations from Nelson and Adkins (1986) or Finney and Martin (1992) - referenced in Cruz and Alexander (2018)
     :param model: model used to estimate flame height ("Nelson", "Finney")
@@ -172,10 +182,14 @@ def getFlameHeight(model, flame_length,
 
 
 # FUNCTION TO CALCULATE FLAME TILT
-def getFlameTilt(model,
-                 flame_length=None, flame_height=None,
-                 slope_angle=None, slope_units=None,
-                 windspeed=None, windspeed_units=None, canopy_ht=None):
+def getFlameTilt(model: str,
+                 flame_length: float = None,
+                 flame_height: float = None,
+                 slope_angle: float = None,
+                 slope_units: str = None,
+                 windspeed: float = None,
+                 windspeed_units: str = None,
+                 canopy_ht: float = None) -> float:
     """
     Function calculates flame tilt using Finney and Martin (1992) and Butler et al. (2004) equations
     :param model: Flame tilt model to use ("Finney", "Butler")
@@ -254,14 +268,17 @@ def getFlameTilt(model,
 
 
 # FUNCTION TO CALCULATE FLAME RESIDENCE TIME
-def getFlameResidenceTime(ros, fuel_consumption, midflame_ws, units):
+def getFlameResidenceTime(ros: float,
+                          fuel_consumption: float,
+                          midflame_ws: float,
+                          units: str) -> float:
     """
     Calculate flame depth or flame residence time using equation from Nelson and Adkins (1988)
     :param ros: Fire rate of spread (m/min)
     :param fuel_consumption: Amount of fuel consumed by fire front (kg/m^2)
     :param midflame_ws: Mid-flame windspeed (m/s)
     :param units: return flame residence time in seconds or minutes ("sec", "min")
-    :return: Flame residence time (secods or minutes)
+    :return: Flame residence time (seconds or minutes)
     """
     res_time = (0.39 * (fuel_consumption ** 0.25) * (midflame_ws ** 1.51)) / (ros / 60)
     if units == 'min':
@@ -271,7 +288,8 @@ def getFlameResidenceTime(ros, fuel_consumption, midflame_ws, units):
 
 
 # FUNCTION TO CALCULATE FLAME DEPTH
-def getFlameDepth(ros, res_time):
+def getFlameDepth(ros: float,
+                  res_time: float) -> float:
     """
     Calculate flame depth or flame residence time using equation from Fons et al. (1963)
     :param ros: Fire rate of spread (m/min)

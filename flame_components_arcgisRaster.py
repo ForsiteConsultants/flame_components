@@ -1,17 +1,30 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct  11 13:25:52 2023
+
+@author: Gregory A. Greene
+"""
+
 import numpy as np
+import arcpy
 from arcpy.sa import *
+from typing import Union
 
 
-def getDegrees(in_data):
+def getDegrees(in_data: Union[float, arcpy.Raster]) -> Union[float, arcpy.Raster]:
     return in_data * 180 / np.pi
 
 
-def getRadians(in_data):
+def getRadians(in_data: Union[float, arcpy.Raster]) -> Union[float, arcpy.Raster]:
     return in_data * np.pi / 180
 
 
 # FUNCTION TO CALCULATE MID-FLAME WIND SPEED
-def getMidFlameWS(windspeed, canopy_cover, canopy_ht, canopy_baseht, units):
+def getMidFlameWS(windspeed: arcpy.Raster,
+                  canopy_cover: arcpy.Raster,
+                  canopy_ht: arcpy.Raster,
+                  canopy_baseht: arcpy.Raster,
+                  units: str) -> arcpy.Raster:
     """
     Function calculates mid-flame wind speed
     :param windspeed: wind speed; if units == "SI": 10m wind speed (km/h); if units == "IMP"" 20ft wind speed (mi/h)
@@ -52,7 +65,10 @@ def getMidFlameWS(windspeed, canopy_cover, canopy_ht, canopy_baseht, units):
 
 
 # FUNCTION TO CALCULATE FLAME LENGTH
-def getFlameLength(model, fire_intensity, flame_depth=None, params_only=False):
+def getFlameLength(model: str,
+                   fire_intensity: arcpy.Raster,
+                   flame_depth: arcpy.Raster = None,
+                   params_only: bool = False) -> arcpy.Raster:
     """
     Equation from Nelson and Adkins (1986) - referenced in Cruz and Alexander (2018)
     :param model: flame length model (refer to "model_dict" for list of options)
@@ -117,9 +133,15 @@ def getFlameLength(model, fire_intensity, flame_depth=None, params_only=False):
 
 
 # FUNCTION TO CALCULATE FLAME HEIGHT
-def getFlameHeight(model, flame_length,
-                   fire_type=None, fire_intensity=None, midflame_ws=None,   # Only for Nelson model
-                   flame_tilt=None, slope_angle=None, slope_units=None):    # Only for Finney model
+def getFlameHeight(model: str,
+                   flame_length: arcpy.Raster,
+                   fire_type: arcpy.Raster = None,          # Only for Nelson model
+                   fire_intensity: arcpy.Raster = None,     # Only for Nelson model
+                   midflame_ws: arcpy.Raster = None,        # Only for Nelson model
+                   flame_tilt: arcpy.Raster = None,         # Only for Finney model
+                   slope_angle: arcpy.Raster = None,        # Only for Finney model
+                   slope_units: str = None                  # Only for Finney model
+                   ) -> arcpy.Raster:
     """
     Equations from Nelson and Adkins (1986) or Finney and Martin (1992) - referenced in Cruz and Alexander (2018)
     :param model: model used to estimate flame height ("Nelson", "Finney")
@@ -144,7 +166,7 @@ def getFlameHeight(model, flame_length,
         height = Con(midflame_ws == 0, flame_length, a * fire_intensity / midflame_ws)
 
         # Rescale height to match flame length if it is predicted to exceed flame length
-        height = Con(height > flame_length, flame_length, height)
+        return Con(height > flame_length, flame_length, height)
     elif model == 'Finney':
         # Convert slope to radians
         if slope_units == 'percent':
@@ -158,21 +180,22 @@ def getFlameHeight(model, flame_length,
         tilt_h = np.pi / 2 - getRadians(flame_tilt)
 
         # Calculate Finney and Martin (1992) flame height
-        height = Con(slope_angle <= 1,
-                     flame_length * Sin(tilt_h),
-                     flame_length * Sin(tilt_h - slope_rad) / Sin(getRadians(90) - slope_rad)
-                     )
+        return Con(slope_angle <= 1,
+                   flame_length * Sin(tilt_h),
+                   flame_length * Sin(tilt_h - slope_rad) / Sin(getRadians(90) - slope_rad))
     else:
         raise Exception('Unable to calculate flame height - Model choice is invalid')
 
-    return height
-
 
 # FUNCTION TO CALCULATE FLAME TILT
-def getFlameTilt(model,
-                 flame_length=None, flame_height=None,
-                 slope_angle=None, slope_units=None,
-                 windspeed=None, windspeed_units=None, canopy_ht=None):
+def getFlameTilt(model: str,
+                 flame_length: arcpy.Raster = None,
+                 flame_height: arcpy.Raster = None,
+                 slope_angle: arcpy.Raster = None,
+                 slope_units: str = None,
+                 windspeed: arcpy.Raster = None,
+                 windspeed_units: str = None,
+                 canopy_ht: arcpy.Raster = None) -> arcpy.Raster:
     """
     Function calculates flame tilt using Finney and Martin (1992) and Butler et al. (2004) equations
     :param model: Flame tilt model to use ("Finney", "Butler")
@@ -249,7 +272,10 @@ def getFlameTilt(model,
 
 
 # FUNCTION TO CALCULATE FLAME RESIDENCE TIME
-def getFlameResidenceTime(ros, fuel_consumption, midflame_ws, units):
+def getFlameResidenceTime(ros: Union[float, arcpy.Raster],
+                          fuel_consumption: Union[float, arcpy.Raster],
+                          midflame_ws: Union[float, arcpy.Raster],
+                          units: str) -> Union[float, arcpy.Raster]:
     """
     Calculate flame depth or flame residence time using equation from Nelson and Adkins (1988)
     :param ros: Fire rate of spread (m/min)
@@ -267,7 +293,8 @@ def getFlameResidenceTime(ros, fuel_consumption, midflame_ws, units):
 
 
 # FUNCTION TO CALCULATE FLAME DEPTH
-def getFlameDepth(ros, res_time):
+def getFlameDepth(ros: Union[float, arcpy.Raster],
+                  res_time: Union[float, arcpy.Raster]):
     """
     Calculate flame depth or flame residence time using equation from Fons et al. (1963)
     :param ros: Fire rate of spread (m/min)
