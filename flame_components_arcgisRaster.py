@@ -278,7 +278,7 @@ def getFlameResidenceTime(ros: Union[float, arcpy.Raster],
                           midflame_ws: Union[float, arcpy.Raster],
                           units: str) -> Union[float, arcpy.Raster]:
     """
-    Calculate flame depth or flame residence time using equation from Nelson and Adkins (1988)
+    Function to calculate flame residence time using equation from Nelson and Adkins (1988)
     :param ros: Fire rate of spread (m/min)
     :param fuel_consumption: Amount of fuel consumed by fire front (kg/m^2)
     :param midflame_ws: Mid-flame windspeed (m/s)
@@ -297,7 +297,7 @@ def getFlameResidenceTime(ros: Union[float, arcpy.Raster],
 def getFlameDepth(ros: Union[float, arcpy.Raster],
                   res_time: Union[float, arcpy.Raster]):
     """
-    Calculate flame depth or flame residence time using equation from Fons et al. (1963)
+    Calculate flame depth using equation from Fons et al. (1963)
     :param ros: Fire rate of spread (m/min)
     :param res_time: Time from initial temp rise to the time of definite drop after reaching peak temp (min)
         Definition per Rothermel and Deeming (1980)
