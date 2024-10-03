@@ -644,16 +644,29 @@ def getFlameDepth(ros: Union[int, float, ndarray],
         return fd.data[0]
 
 
-# Function to generate blocks
 def _gen_blocks(array, block_size, stride):
+    """
+    Function to generate blocks
+    :param array: The array to process
+    :param block_size: The size of each block
+    :param stride:
+    :return:
+    """
     num_blocks = (array.shape[0] - block_size) // stride + 1
     blocks = [array[i * stride:i * stride + block_size] for i in range(num_blocks)]
     positions = [(i * stride, (i * stride + block_size)) for i in range(num_blocks)]
     return blocks, positions
 
-# Function to estimate optimal block size
-def _estimate_optimal_block_size(array_shape, num_processors):
-    # Example: simple logic to estimate block size based on shape and processors
+
+def _estimate_optimal_block_size(array_shape: tuple,
+                                 num_processors: int) -> int:
+    """
+    Function to estimate optimal block size
+    :param array_shape: Shape of the array being processed
+    :param num_processors: Number of processors being used for multiprocessing
+    :return: Estimated block size
+    """
+    # Estimate block size based on shape and processors
     return array_shape[0] // num_processors
 
 
@@ -690,12 +703,13 @@ def flameComponent_ArrayMultiprocessing(flame_function: str,
     # Get the function object from the global scope
     function_to_run = globals().get(flame_func_dict.get(flame_function))
 
+    # Verify the function request
     if function_to_run is None:
         raise ValueError(f'Function for {flame_function} does not exist.'
                          f'The options are: {list(flame_func_dict.keys())}')
 
     # Extract array datasets from kwargs
-    array_kwargs = {key: val for key, val in kwargs.items() if isinstance(val, np.ndarray)}
+    array_kwargs = {key: val for key, val in kwargs.items() if isinstance(val, ndarray)}
     array_list = list(array_kwargs.values())
 
     # Verify there is at least one input array
