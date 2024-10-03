@@ -4,11 +4,9 @@ Created on Wed Oct  11 13:25:52 2023
 
 @author: Gregory A. Greene
 """
-from multiprocessing.managers import Value
 
-# import numpy as np
 from numpy import ma, ndarray, nan, isnan
-from numpy.ma import cos, sin, tan, arccos, arcsin, arctan, sqrt, log
+from numpy.ma import sin, arccos, arcsin, arctan, sqrt, log, power
 from numpy import pi, degrees, radians
 from typing import Union, Optional
 
@@ -124,7 +122,7 @@ def getFlameLength(model: str,
     Function to estimate flame length from a variety of published models.
     Equation from Nelson and Adkins (1986) - referenced in Cruz and Alexander (2018)
     :param model: flame length model (refer to "model_dict" for list of options)
-        All models come from Finney and Grumstrup (2023), including their own 2023 model
+        All models come from Finney and Grumstrup (2023), including their own 2023 model.
     :param fire_intensity: head fire intensity (kW/m)
     :param flame_depth: head fire flame depth (m) [OPTIONAL]
         Only required for "Finney_HEAD" model
@@ -166,6 +164,7 @@ def getFlameLength(model: str,
         'Davies_HEAD': (0.220000, 0.2900),  # Davies et al. (2019); Source = Heathlands; Field
         'Finney_HEAD': (0.01051, 0.774, 0.161)  # Finney and Grumstrup (2023); Source = Gas slot burner; Lab
     }
+
     # ### CHECK FOR NUMPY ARRAYS IN INPUT PARAMETERS
     if any(isinstance(data, ndarray) for data in [fire_intensity, flame_depth]):
         return_array = True
@@ -195,21 +194,22 @@ def getFlameLength(model: str,
     else:
         flame_depth = ma.array([flame_depth], mask=isnan([flame_depth]))
 
+    # Verify params_only
+    if not isinstance(params_only, bool):
+        raise TypeError('The "params_only" parameter must be bool data type')
+
     # Get model parameters
     model_params = model_dict.get(model)
-
-    if model_params is None:
-        raise Exception('Unable to calculate flame length - Model choice is invalid')
 
     if params_only:
         return model_params
 
     if model == 'Finney_HEAD':
         fl = (model_params[0] *
-              ma.power(fire_intensity, model_params[1]) /
-              ma.power(flame_depth, model_params[2]))
+              power(fire_intensity, model_params[1]) /
+              power(flame_depth, model_params[2]))
     else:
-        fl = model_params[0] * ma.power(fire_intensity, model_params[1])
+        fl = model_params[0] * power(fire_intensity, model_params[1])
 
     # Ensure fl >= 0
     fl[fl < 0] = 0
@@ -518,7 +518,7 @@ def getFlameTilt(model: str,
 
         # Calculate Butler et al. (2004) flame tilt angle
         # This equation already calculates tilt relative to vertical rather than horizontal
-        tilt_v = arctan(sqrt((3 * ma.power(uc, 3)) / (2 * g * 10)))
+        tilt_v = arctan(sqrt((3 * power(uc, 3)) / (2 * g * 10)))
 
     # Ensure tilt_v >= 0
     tilt_v[tilt_v < 0] = 0
@@ -575,7 +575,7 @@ def getFlameResidenceTime(ros: Union[int, float, ndarray],
         midflame_ws = ma.array([midflame_ws], mask=isnan([midflame_ws]))
 
     # Calculate flame residence time
-    res_time = (0.39 * ma.power(fuel_consumption, 0.25) * ma.power(midflame_ws, 1.51)) / (ros / 60)
+    res_time = (0.39 * power(fuel_consumption, 0.25) * power(midflame_ws, 1.51)) / (ros / 60)
     if units == 'min':
         res_time /= 60
 
