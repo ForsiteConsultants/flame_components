@@ -9,9 +9,9 @@ from numpy import ma, ndarray, nan, isnan, array_split
 from numpy.ma import sin, arccos, arcsin, arctan, sqrt, log, power
 from numpy import pi, degrees, radians
 from typing import Union, Optional
-import inspect
+# import inspect
 import multiprocessing as mp
-from multiprocessing import current_process
+# from multiprocessing import current_process
 
 
 # FUNCTION TO CALCULATE MID-FLAME WIND SPEED
@@ -105,7 +105,7 @@ def getMidFlameWS(wind_speed: Union[int, float, ndarray],
                            wind_speed * 1.83 / log((20 + (0.36 * canopy_ht)) / (0.13 * canopy_ht)),
                            # Calculate sheltered midflame windspeed
                            wind_speed * 0.555 / (
-                                       sqrt(f * canopy_ht) * log((20 + (0.36 * canopy_ht)) / (0.13 * canopy_ht))))
+                                   sqrt(f * canopy_ht) * log((20 + (0.36 * canopy_ht)) / (0.13 * canopy_ht))))
 
     # Ensure midflame_ws >= 0
     midflame_ws[midflame_ws < 0] = 0
@@ -672,9 +672,9 @@ def _estimate_optimal_block_size(array_shape: tuple,
 
 # TODO - Verify that this function works...
 def flameComponent_ArrayMultiprocessing(flame_function: str,
-                                num_processors: int = 2,
-                                block_size: int = None,
-                                *kwargs) -> list:
+                                        num_processors: int = 2,
+                                        block_size: int = None,
+                                        *kwargs) -> list:
     """
     Function breaks input arrays into blocks and processes each block with a different worker/processor.
     Uses the function requested in the "flame_function" parameter.
