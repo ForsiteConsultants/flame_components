@@ -666,7 +666,7 @@ def _estimate_optimal_block_size(array_shape: tuple,
     :param num_processors: Number of processors being used for multiprocessing
     :return: Estimated block size
     """
-    # Estimate block size based on shape and processors
+    # Estimate block size based on array shape and number of processors being used
     return array_shape[0] // num_processors
 
 
