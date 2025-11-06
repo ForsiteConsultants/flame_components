@@ -5,6 +5,7 @@ Created on Wed Oct  11 13:25:52 2023
 @author: Gregory A. Greene
 """
 
+import numbers
 from numpy import ma, ndarray, nan, isnan, array_split
 from numpy.ma import sin, arccos, arcsin, arctan, sqrt, log, power
 from numpy import pi, degrees, radians
@@ -47,35 +48,35 @@ def getMidFlameWS(wind_speed: Union[int, float, ndarray],
 
     # ### VERIFY ALL INPUTS AND CONVERT TO MASKED NUMPY ARRAYS
     # Verify windspeed
-    if not isinstance(wind_speed, (int, float, ndarray)):
+    if not isinstance(wind_speed, (numbers.Real, ndarray)):
         raise TypeError('windspeed must be either int, float or numpy ndarray data types')
     elif isinstance(wind_speed, ndarray):
         wind_speed = ma.array(wind_speed, mask=isnan(wind_speed))
-    elif isinstance(wind_speed, (int, float)):
+    elif isinstance(wind_speed, numbers.Real):
         wind_speed = ma.array([float(wind_speed)], mask=isnan([wind_speed]))
 
     # Verify canopy_cover
-    if not isinstance(canopy_cover, (int, float, ndarray)):
+    if not isinstance(canopy_cover, (numbers.Real, ndarray)):
         raise TypeError('canopy_cover must be either int, float or numpy ndarray data types')
     elif isinstance(canopy_cover, ndarray):
         canopy_cover = ma.array(canopy_cover, mask=isnan(canopy_cover))
-    elif isinstance(canopy_cover, (int, float)):
+    elif isinstance(canopy_cover, numbers.Real):
         canopy_cover = ma.array([float(canopy_cover)], mask=isnan([canopy_cover]))
 
     # Verify canopy_ht
-    if not isinstance(canopy_ht, (int, float, ndarray)):
+    if not isinstance(canopy_ht, (numbers.Real, ndarray)):
         raise TypeError('canopy_ht must be either int, float or numpy ndarray data types')
     elif isinstance(canopy_ht, ndarray):
         canopy_ht = ma.array(canopy_ht, mask=isnan(canopy_ht))
-    elif isinstance(canopy_ht, (int, float)):
+    elif isinstance(canopy_ht, numbers.Real):
         canopy_ht = ma.array([float(canopy_ht)], mask=isnan([canopy_ht]))
 
     # Verify canopy_baseht
-    if not isinstance(canopy_baseht, (int, float, ndarray)):
+    if not isinstance(canopy_baseht, (numbers.Real, ndarray)):
         raise TypeError('canopy_baseht must be either int, float or numpy ndarray data types')
     elif isinstance(canopy_baseht, ndarray):
         canopy_baseht = ma.array(canopy_baseht, mask=isnan(canopy_baseht))
-    elif isinstance(canopy_baseht, (int, float)):
+    elif isinstance(canopy_baseht, numbers.Real):
         canopy_baseht = ma.array([float(canopy_baseht)], mask=isnan([canopy_baseht]))
 
     # Verify units
@@ -188,19 +189,19 @@ def getFlameLength(model: str,
             raise ValueError('The "Finney_HEAD" model requires "fire_intensity" and "flame_depth" as inputs')
 
     # Verify fire_intensity
-    if not isinstance(fire_intensity, (int, float, ndarray)):
+    if not isinstance(fire_intensity, (numbers.Real, ndarray)):
         raise TypeError('fire_intensity must be either int, float or numpy ndarray data types')
     elif isinstance(fire_intensity, ndarray):
         fire_intensity = ma.array(fire_intensity, mask=isnan(fire_intensity))
-    else:  # isinstance(fire_intensity, (int, float)):
+    else:  # isinstance(fire_intensity, numbers.Real):
         fire_intensity = ma.array([float(fire_intensity)], mask=isnan([fire_intensity]))
 
     # Verify flame_depth
-    if not isinstance(flame_depth, (int, float, ndarray, type(None))):
+    if not isinstance(flame_depth, (numbers.Real, ndarray, type(None))):
         raise TypeError('flame_depth must be either int, float or numpy ndarray data types')
     elif isinstance(flame_depth, ndarray):
         flame_depth = ma.array(flame_depth, mask=isnan(flame_depth))
-    elif isinstance(flame_depth, (int, float)):
+    elif isinstance(flame_depth, numbers.Real):
         flame_depth = ma.array([float(flame_depth)], mask=isnan([flame_depth]))
 
     # Verify params_only
@@ -282,15 +283,15 @@ def getFlameHeight(model: str,
             raise ValueError('The "Finney" model requires "flame_tilt", "slope_angle", and "slope_units" as inputs')
 
     # Verify flame_length
-    if not isinstance(flame_length, (int, float, ndarray)):
+    if not isinstance(flame_length, (numbers.Real, ndarray)):
         raise TypeError('flame_length must be either int, float or numpy ndarray data types')
     elif isinstance(flame_length, ndarray):
         flame_length = ma.array(flame_length, mask=isnan(flame_length))
-    elif isinstance(flame_length, (int, float)):
+    elif isinstance(flame_length, numbers.Real):
         flame_length = ma.array([float(flame_length)], mask=isnan([flame_length]))
 
     # Verify fire_type
-    if not isinstance(fire_type, (str, int, float, ndarray, type(None))):
+    if not isinstance(fire_type, (numbers.Real, float, ndarray, type(None))):
         raise TypeError('fire_type must be either None, str, int or numpy ndarray data types')
     elif isinstance(fire_type, (str, type(None))):
         if fire_type not in ['surface', 'passive crown', 'active crown']:
@@ -300,39 +301,39 @@ def getFlameHeight(model: str,
             fire_type = fire_type_dict.get(fire_type, nan)  # Convert fire_type to integer value
     if isinstance(fire_type, ndarray):
         fire_type = ma.array(fire_type, mask=isnan(fire_type))
-    elif isinstance(midflame_ws, (int, float)):
+    elif isinstance(midflame_ws, numbers.Real):
         fire_type = ma.array([float(fire_type)], mask=isnan([fire_type]))
 
     # Verify fire_intensity
-    if not isinstance(fire_intensity, (int, float, ndarray, type(None))):
+    if not isinstance(fire_intensity, (numbers.Real, ndarray, type(None))):
         raise TypeError('fire_intensity must be either iNone, nt, float or numpy ndarray data types')
     elif isinstance(fire_intensity, ndarray):
         fire_intensity = ma.array(fire_intensity, mask=isnan(fire_intensity))
-    elif isinstance(fire_intensity, (int, float)):
+    elif isinstance(fire_intensity, numbers.Real):
         fire_intensity = ma.array([float(fire_intensity)], mask=isnan([fire_intensity]))
 
     # Verify midflame_ws
-    if not isinstance(midflame_ws, (int, float, ndarray, type(None))):
+    if not isinstance(midflame_ws, (numbers.Real, ndarray, type(None))):
         raise TypeError('midflame_ws must be either None, int, float or numpy ndarray data types')
     elif isinstance(midflame_ws, ndarray):
         midflame_ws = ma.array(midflame_ws, mask=isnan(midflame_ws))
-    elif isinstance(midflame_ws, (int, float)):
+    elif isinstance(midflame_ws, numbers.Real):
         midflame_ws = ma.array([float(midflame_ws)], mask=isnan([midflame_ws]))
 
     # Verify flame_tilt
-    if not isinstance(flame_tilt, (int, float, ndarray, type(None))):
+    if not isinstance(flame_tilt, (numbers.Real, ndarray, type(None))):
         raise TypeError('flame_tilt must be either None, int, float or numpy ndarray data types')
     elif isinstance(flame_tilt, ndarray):
         flame_tilt = ma.array(flame_tilt, mask=isnan(flame_tilt))
-    elif isinstance(flame_tilt, (int, float)):
+    elif isinstance(flame_tilt, numbers.Real):
         flame_tilt = ma.array([float(flame_tilt)], mask=isnan([flame_tilt]))
 
     # Verify slope_angle
-    if not isinstance(slope_angle, (int, float, ndarray, type(None))):
+    if not isinstance(slope_angle, (numbers.Real, ndarray, type(None))):
         raise TypeError('slope_angle must be either None, int, float or numpy ndarray data types')
     elif isinstance(slope_angle, ndarray):
         slope_angle = ma.array(slope_angle, mask=isnan(slope_angle))
-    elif isinstance(slope_angle, (int, float)):
+    elif isinstance(slope_angle, numbers.Real):
         slope_angle = ma.array([slope_angle], mask=isnan([slope_angle]))
 
     # Verify slope_units
@@ -445,27 +446,27 @@ def getFlameTilt(model: str,
             raise ValueError('The "Butler" model requires "windspeed", "windspeed_units", and "canopy_ht" as inputs')
 
     # Verify flame_length
-    if not isinstance(flame_length, (int, float, ndarray, type(None))):
+    if not isinstance(flame_length, (numbers.Real, ndarray, type(None))):
         raise TypeError('flame_length must be either None, int, float or numpy ndarray data types')
     elif isinstance(flame_length, ndarray):
         flame_length = ma.array(flame_length, mask=isnan(flame_length))
-    elif isinstance(flame_length, (int, float)):
+    elif isinstance(flame_length, numbers.Real):
         flame_length = ma.array([flame_length], mask=isnan([flame_length]))
 
     # Verify flame_height
-    if not isinstance(flame_height, (int, float, ndarray, type(None))):
+    if not isinstance(flame_height, (numbers.Real, ndarray, type(None))):
         raise TypeError('flame_height must be either None, int, float or numpy ndarray data types')
     elif isinstance(flame_height, ndarray):
         flame_height = ma.array(flame_height, mask=isnan(flame_height))
-    elif isinstance(flame_height, (int, float)):
+    elif isinstance(flame_height, numbers.Real):
         flame_height = ma.array([flame_height], mask=isnan([flame_height]))
 
     # Verify slope_angle
-    if not isinstance(slope_angle, (int, float, ndarray, type(None))):
+    if not isinstance(slope_angle, (numbers.Real, ndarray, type(None))):
         raise TypeError('slope_angle must be either None, int, float or numpy ndarray data types')
     elif isinstance(slope_angle, ndarray):
         slope_angle = ma.array(slope_angle, mask=isnan(slope_angle))
-    elif isinstance(slope_angle, (int, float)):
+    elif isinstance(slope_angle, numbers.Real):
         slope_angle = ma.array([slope_angle], mask=isnan([slope_angle]))
 
     # Verify slope_units
@@ -475,11 +476,11 @@ def getFlameTilt(model: str,
         raise ValueError(f'The "slope_units" parameter must be one of the following: "degrees", "percent"')
 
     # Verify wind_speed
-    if not isinstance(wind_speed, (int, float, ndarray, type(None))):
+    if not isinstance(wind_speed, (numbers.Real, ndarray, type(None))):
         raise TypeError('wind_speed must be either None, int, float or numpy ndarray data types')
     elif isinstance(wind_speed, ndarray):
         wind_speed = ma.array(wind_speed, mask=isnan(wind_speed))
-    elif isinstance(wind_speed, (int, float)):
+    elif isinstance(wind_speed, numbers.Real):
         wind_speed = ma.array([wind_speed], mask=isnan([wind_speed]))
 
     # Verify wind_speed_units
@@ -560,27 +561,27 @@ def getFlameResidenceTime(ros: Union[int, float, ndarray],
 
     # ### VERIFY ALL INPUTS AND CONVERT TO MASKED NUMPY ARRAYS
     # Verify ros
-    if not isinstance(ros, (int, float, ndarray)):
+    if not isinstance(ros, (numbers.Real, ndarray)):
         raise TypeError('ros must be either int, float or numpy ndarray data types')
     elif isinstance(ros, ndarray):
         ros = ma.array(ros, mask=isnan(ros))
-    else:  # if isinstance(ros, (int, float)):
+    else:  # if isinstance(ros, numbers.Real):
         ros = ma.array([ros], mask=isnan([ros]))
 
     # Verify fuel_consumption
-    if not isinstance(fuel_consumption, (int, float, ndarray)):
+    if not isinstance(fuel_consumption, (numbers.Real, ndarray)):
         raise TypeError('fuel_consumption must be either int, float or numpy ndarray data types')
     elif isinstance(fuel_consumption, ndarray):
         fuel_consumption = ma.array(fuel_consumption, mask=isnan(fuel_consumption))
-    else:  # isinstance(fuel_consumption, (int, float)):
+    else:  # isinstance(fuel_consumption, numbers.Real):
         fuel_consumption = ma.array([fuel_consumption], mask=isnan([fuel_consumption]))
 
     # Verify midflame_ws
-    if not isinstance(midflame_ws, (int, float, ndarray)):
+    if not isinstance(midflame_ws, (numbers.Real, ndarray)):
         raise TypeError('fuel_consumption must be either int, float or numpy ndarray data types')
     elif isinstance(midflame_ws, ndarray):
         midflame_ws = ma.array(midflame_ws, mask=isnan(midflame_ws))
-    else:  # isinstance(midflame_ws, (int, float)):
+    else:  # isinstance(midflame_ws, numbers.Real):
         midflame_ws = ma.array([midflame_ws], mask=isnan([midflame_ws]))
 
     # Calculate flame residence time
@@ -616,19 +617,19 @@ def getFlameDepth(ros: Union[int, float, ndarray],
 
     # ### VERIFY ALL INPUTS AND CONVERT TO MASKED NUMPY ARRAYS
     # Verify ros
-    if not isinstance(ros, (int, float, ndarray)):
+    if not isinstance(ros, (numbers.Real, ndarray)):
         raise TypeError('ros must be either int, float or numpy ndarray data types')
     elif isinstance(ros, ndarray):
         ros = ma.array(ros, mask=isnan(ros))
-    else:  # isinstance(ros, (int, float)):
+    else:  # isinstance(ros, numbers.Real):
         ros = ma.array([ros], mask=isnan([ros]))
 
     # Verify res_time
-    if not isinstance(res_time, (int, float, ndarray)):
+    if not isinstance(res_time, (numbers.Real, ndarray)):
         raise TypeError('res_time must be either int, float or numpy ndarray data types')
     elif isinstance(res_time, ndarray):
         res_time = ma.array(res_time, mask=isnan(res_time))
-    else:  # isinstance(res_time, (int, float)):
+    else:  # isinstance(res_time, numbers.Real):
         res_time = ma.array([res_time], mask=isnan([res_time]))
 
     # Calculate flame depth
