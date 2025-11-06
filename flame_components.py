@@ -6,7 +6,7 @@ Created on Wed Oct  11 13:25:52 2023
 """
 
 import numbers
-from numpy import ma, ndarray, nan, isnan, array_split
+from numpy import ma, ndarray, nan, isnan
 from numpy.ma import sin, arccos, arcsin, arctan, sqrt, log, power
 from numpy import pi, degrees, radians
 from typing import Union, Optional
